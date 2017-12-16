@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dinesafe</title>
+</head>
+<body>
+    <h1>hello</h1>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+
+    <script>
+        const geocoder_api_key = 'AIzaSyDV_T5xApAS6kp3yuA5ZjQq_MQqLJOiDfg'
+
+        $.getJSON("./dinesafe.json", function (json) {
+                var est = json.ROWDATA.ROW.map(function(row){
+                    return row.ESTABLISHMENTTYPE
+                })
+
+                var type = est.filter(function(e, i){
+                    return est.indexOf(e) === i
+                })
+
+                var est_type = [
+                    "Food Take Out",
+                    "Restaurant",
+                    //"Refreshment Stand (Stationary)",
+                    "Food Vending Facility",
+                    "Mobile Food Preparation Premises",
+                    "Food Cart",
+                ]
+
+                var by_type = json.ROWDATA.ROW.filter(function(est){
+                    if(est_type.indexOf(est.ESTABLISHMENTTYPE) >= 0){
+                        return true
+                    }
+                })
+                console.log(by_type)
+
+                var unique_est_id = [...new Set(by_type.map(est => est.ESTABLISHMENT_ID))];
+               
+
+                var filtered_by_id =  by_type.filter((obj, pos, arr) => {
+                    if(unique_est_id.indexOf(obj.ESTABLISHMENT_ID) >= 0){
+                        var i = unique_est_id.indexOf(obj.ESTABLISHMENT_ID)
+                        unique_est_id.splice(i, 1)
+                        return true
+                    }
+            
+                });
+
+                var unique_est_name = [...new Set(filtered_by_id.map(est => est.ESTABLISHMENT_NAME))];
+          
+                var filtered_by_name = filtered_by_id.filter((obj, pos, arr) => {
+                if (unique_est_name.indexOf(obj.ESTABLISHMENT_NAME) >= 0) {
+                    var i = unique_est_name.indexOf(obj.ESTABLISHMENT_NAME)
+                    unique_est_name.splice(i, 1)
+                    return true
+                }
+    
+            });
+
+            
+
+            var not_include = [
+                'SOUVLAKI',
+                'PIZZA',
+                "PIAZZA",
+                "PIZZIA",
+                "FISH",
+                "CHINESE", 
+                "SUSHI",
+                "COFFEE",
+                "SHAWARMA",
+                "INDIA",
+                "NOODLE",
+                "KOREA",
+                "KOREAN",
+                "PHARMAC",
+                "DIM SUM",
+                "PHO",
+                "TACO",
+                "TRATTORIA",
+                "GREEK",
+                "GREECE",
+                "ITALIAN",
+                "DUMPLINGS",
+                "DUMPLING",
+                "KABOB",
+                "KABAB",
+                "KEBAB",
+                "KEBOB",
+                "RAMEN",
+                "MEDITERRANEAN",
+                "MEDITERANEAN",
+                "TEA",
+                "SEAFOOD",
+                "STARBUCKS",
+                "STARBUCK'S",
+                "CINEMA",
+                "ASIA",
+                "ATHEN",
+                "BAGEL",
+                "BAKERY",
+                "BAKER",
+                "BAKESHOP",
+                "BAKE SHOP",
+                "PATISSERIE",
+                "BANGKOK",
+                "CANTONESE",
+                "CARIBBEAN",
+                "CARRIBEAN",
+                "KARIBBEAN",
+                "GELATO",
+                "GELATI",
+                "CHURRASQUEIRA",
+                "DONUT",
+                "FALAFEL",
+                "POPCORN",
+                "THAI",
+                "PIZZERIA",
+                "MEXICAN",
+                "MEXICANA",
+                "MEXICO",
+                "PETRO CANADA",
+                "JUICE",
+                "CONVENIENCE",
+                "POUTINE",
+                "ESPRESSO",
+                "FILIPINO",
+                "JERK",
+                "BURRITO",
+                "FIESTA",
+                "DOLLARAMA",
+                "CHINA",
+                "LEBANESE",
+                "BURGER",
+                "JAPANESE",
+                "PANINI",
+                "PITA",
+                "IKEA",
+                "PUNJAB",
+                "MC DONALDS",
+                "ROTI",
+                "EGG",
+                "FAMOUS PLAYERS CONCESSION",
+                "CHURRASCO",
+                "SECOND CUP",
+                "TERIYAKI",
+                "TZATZIKI",
+                "MR SUB",
+                "ARENA",
+                "SOUP",
+                "COUNTRY STYLE",
+                "BUDDHA",
+                "YOGEN FRUZ",
+                "PIEROGI",
+                "PEROGY",
+                "PEROGIE",
+                "BOIL",
+                "TIM HORTONS",
+                "TIMOTHY'S",
+                "KIMCHI",
+                "ETHIOPIAN",
+                "ETHIOPIA",
+                "CHIPOTLE",
+                "SHUSHI",
+                "FRESHII",
+                "PINKBERRY",
+                "PINK BERRY",
+                "SICHUAN",
+                "SZECHUAN",
+                "DONER",
+                "BRIOCHE",
+                "BASIL BOX",
+                "KRISPY KREME",
+                "RISTORANTE",
+                "JAMAICAN",
+                "JAMAICA",
+                "TOKYO SMOKE",
+                "IZAKAYA",
+                "CATERING",
+                "SWISS CHALET",
+                "SLICE",
+                "AFRICAN",
+                "DESSERT",
+                "UNCLE TETSU",
+                "HARBOURFRONT CENTRE SAILING AND POWER BOATING",
+                "UNIVERSITY",
+                "CABANA",
+                "SUPPLEMENTS",
+                "COOKIES",
+                "FINE FOODS",
+                "CHARRO",
+                "CUBANO",
+                "CUBANA",
+                "CUBAN",
+                "NANDOS",
+                "DELTA HOTEL",
+                "TAPAS",
+                "SHOPPERS DRUG MART",
+                "SUBWAY",
+                "CINEPLEX",
+                "MASALA",
+                "BAO",
+                "SAMOSAS",
+                "CAKE",
+                "YORK U",
+                "YORKU",
+                "GOLF",
+                "RACETRACK",
+                "BREAKFAST",
+                "PANNINI",
+                "TORONTO AIRPORT MARRIOTT HOTEL",
+                "EMPANADA",
+                "DAIRY",
+                "BASKIN-ROBBINS",
+                "BASKIN ROBBINS",
+                "BUDDIES IN BAD TIMES THEATRE",
+                "CINNABON",
+                "CONGEE",
+                "EL ",
+                "FOR YOUR EYES ONLY",
+                "CHOCOLAT",
+                "IRISH",
+                "MEDIEVAL TIMES DINNER & TOURNAMENT",
+                "HEALTH FOODS",
+                "GYRO",
+                "TORONTO CHRISTMAS MARKET",
+                "TORTILLA",
+                "TORTILLERIA",
+                "WOK",
+                "THE KIOSK",
+                "ORIENT",
+                "SAFFRON SPICE KITCHEN",
+                "BEIJING",
+                "SHANGHAI",
+                "WENDY'S",
+                "HALIBUT",
+                "SWEET",
+                "BOWLERAMA",
+                "SCHULICH",
+                "WEST END Y",
+                "DUFFERIN GROVE PARK",
+                "CROISSANT",
+                "CREPE",
+                "RESIDENCE INN BY MARRIOTT",
+                "MONGOLIAN",
+                "SPRING ROLLS",
+                "WRAP",
+                "BLUE BANANA",
+                "COMEDY",
+                "-SATELLITE",
+                " SEA ",
+                "MR SOFTEE",
+                "PASTA",
+                "PASTRY",
+                "FAMOUS PEOPLE PLAYERS",
+                "BANHMI",
+                "THE RED LIGHT",
+                "THE TAMPERED PRESS",
+                 "CREWS AND TANGOS RESTAURANT AND BAR",
+                 "FAMOUS PLAYERS",
+                 "GLOBAL CHEESE",
+                 "JAPAN",
+                 "HOLIDAY INN",
+                 "YORK CIVIC CENTRE",
+                 "RABBA",
+                 "HIMALAYAN",
+                 "PIE",
+                 "TANDOORI",
+                 "TANDORI",
+                 "TANDOOREE",
+                 "CONCESSION STAND",
+                 "RICE",
+                 "HUEVOS",
+                 "RIPLEY'S CAFE",
+                 "PEKING",
+                 "POT",
+                 "VILLA MADINA",
+                 "SUB",
+                 "B. GOOD",
+                 "ALI BABA'S",
+                 "TAIYAKI",
+                 "PRAVDA VODKA BAR",
+                 "CONE",
+                 "YMCA",
+                 "BEST WESTERN",
+                 "ETHIOP",
+                 "SNAKES & LATTES",
+                 "MANDARIN",
+                 "CAFETERIA",
+                 "FIRKIN",
+                 "VEGETARIAN",
+                 "VEGAN",
+                 "HARVEY'S",
+                 "HASTY MARKET",
+                 "HOOTERS",
+                 "IL FORNELLO",
+                 "KEG",
+                 "KERNELS",
+                 "VIETNAMESE",
+                 "LATIN",
+                 "LUNA CAFE",
+                 "MYSTIC MUFFIN",
+                 "BANH MI",
+                 "SPAGHETTI",
+                 "OVER EASY",
+                 "ROY THOMSON HALL",
+                 "SASHIMI",
+                 "TERRONI",
+                 "DAYS INN",
+                 "MERCATTO",
+                 "OYSTER",
+                 "PUSATERI'S",
+                 "FRESHLY SQUEEZED",
+                 "NESTLE CANADA",
+                 "TORONTO COMMUNITY HOUSING CORP"
+
+
+
+
+            ]
+
+            yes_include = [
+                "CHICKEN",
+                "BBQ",
+                "BAR B.Q.",
+                "BARBECUE",
+                "LOUISIANA",
+                "SMOKE",
+                "BARQUE",
+                "SMOKEHOUSE"
+            ]
+
+            yes_include_vegan = [
+                "VEGETARIAN",
+                "VEGAN",
+                "ORGANIC",
+                "FRESH"
+            ]
+
+
+            filtered_by_name.forEach(function(obj){
+                var upper_name = obj.ESTABLISHMENT_NAME.toUpperCase();
+                not_include.forEach(function(not){
+                    if(upper_name.includes(not)){
+                        obj.chicken = false
+                    }
+                })
+
+            })
+
+            filtered_by_name.forEach(function(obj){
+                var upper_name = obj.ESTABLISHMENT_NAME.toUpperCase();
+                yes_include.forEach(function(yes){
+                    if(upper_name.includes(yes)){
+                        obj.chicken = true
+                    }
+                })
+
+            })
+
+            filtered_by_name.forEach(function (obj) {
+                var upper_name = obj.ESTABLISHMENT_NAME.toUpperCase();
+                yes_include_vegan.forEach(function (yes) {
+                    if (upper_name.includes(yes)) {
+                        obj.vegan = true
+                    }
+                })
+
+            })
+
+           // var chicken_places = filtered_by_name.filter((obj, pos, arr) => {
+                //var lower_name = obj.ESTABLISHMENT_NAME.toLowerCase();
+                //if (lower_name.includes('chicken')) {
+                    //arr[pos].chicken = true
+                    //obj.chicken = true
+                   // return true;
+                //}
+
+            //});
+            console.log("Filtered by name", filtered_by_name)
+
+            var not_chicken = filtered_by_name.filter(function(obj){
+                return obj.chicken === false
+            })
+            console.log('not',not_chicken)
+            
+            var maybe_chicken = filtered_by_name.filter(function (obj) {
+                return !(obj.chicken === false)
+                })
+            console.log('maybe',maybe_chicken)
+
+            var yes_chicken = filtered_by_name.filter(function (obj) {
+                return obj.chicken === true
+            })
+            console.log('yes', yes_chicken)
+            //cstring = JSON.stringify(yes_chicken)
+            //console.log(cstring)
+
+            //yes_chicken.forEach(function (chicken) {
+
+
+                //$.ajax({
+                  //  url: 'https://maps.googleapis.com/maps/api/geocode/json',
+                    //method: 'GET',
+                    //dataType: 'json',
+                    //data: {
+                      //  key: geocoder_api_key,
+                      //  address: chicken.ESTABLISHMENT_ADDRESS,
+                  //  }
+               // }).then(function (res) {
+                 //   console.log('It worked!', res.results[0].geometry.location);
+                  //  chicken.lat = res.results[0].geometry.location.lat
+                  //  chicken.lng = res.results[0].geometry.location.lng
+                  //  console.log('yes chicken', yes_chicken)
+                   // vstring = JSON.stringify(yes_chicken)
+                   // console.log(vstring)
+               // });
+           // })
+
+            var yes_vegan = filtered_by_name.filter(function (obj) {
+                return obj.vegan === true
+            })
+            
+           // yes_vegan.forEach(function(vegan){
+             
+
+             //   $.ajax({
+               //     url: 'https://maps.googleapis.com/maps/api/geocode/json',
+                 //   method: 'GET',
+                  //  dataType: 'json',
+                  //  data: {
+                    //    key: geocoder_api_key,
+                      //  address: vegan.ESTABLISHMENT_ADDRESS,
+                  //  }
+               // }).then(function(res) {
+                 //   console.log('It worked!', res.results[0].geometry.location );
+                   // vegan.lat = res.results[0].geometry.location.lat
+                   // vegan.lng = res.results[0].geometry.location.lng
+                   // console.log('yes vegan', yes_vegan)
+                   // vstring = JSON.stringify(yes_vegan)
+                    //console.log(vstring)
+               // });
+           // })
+            //console.log('yes', yes_vegan)
+
+           // var string = JSON.stringify(maybe_chicken)
+            
+            //console.log(string)
+
+
+
+        });
+
+
+     
+    </script>
+    
+</body>
+</html>
